@@ -1,6 +1,7 @@
 #ifndef BIGINTEGER_H
 #define BIGINTEGER_H
 
+#include <typeinfo>
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -353,10 +354,9 @@ string BigInteger::add(string number1, string number2)
 	else// if(number1.size() < number2.size())
 		number1.insert(0, differenceInLength, '0');
 
-	for (int i = number1.size() - 1; i >= 0; --i)
+	for (int i = add.size()-1; i >= 0; i--)
 	{
 		add[i] = ((carry - '0') + (number1[i] - '0') + (number2[i] - '0')) + '0';
-
 		if (i != 0)
 		{
 			if (add[i] > '9')
@@ -364,15 +364,16 @@ string BigInteger::add(string number1, string number2)
 				add[i] -= 10;
 				carry = '1';
 			}
-			else
+			else {
 				carry = '0';
+			}
 		}
 	}
-	if (add[0] > '9')
-	{
+	if (add[0] > '9') {
 		add[0] -= 10;
 		add.insert(0, 1, '1');
 	}
+	carry = '0';
 	return add;
 }
 
@@ -389,14 +390,12 @@ string BigInteger::subtract(string number1, string number2)
 	else
 		number1.insert(0, differenceInLength, '0');
 
-	for (int i = number1.length() - 1; i >= 0; --i)
-	{
-		if (number1[i] < number2[i])
-		{
+	for (int i = number1.length(); i >= 0; i--) {
+		if (number1[i] < number2[i]) {
 			number1[i] += 10;
 			number1[i - 1]--;
 		}
-		sub[i] = ((number1[i] - '0') - (number2[i] - '0')) + '0';
+		sub[i] = (number1[i] - '0') - (number2[i] - '0') + '0';
 	}
 
 	while (sub[0] == '0' && sub.length() != 1) // erase leading zeros
@@ -413,13 +412,13 @@ string BigInteger::multiply(string n1, string n2)
 		n1.swap(n2);
 
 	string res = "0";
-	for (int i = n1.length() - 1; i >= 0; --i)
+	for (int i = n1.length() - 1; i >= 0; i--)
 	{
 		string temp = n2;
 		int currentDigit = n1[i] - '0';
 		int carry = 0;
 
-		for (int j = temp.length() - 1; j >= 0; --j)
+		for (int j = temp.length() - 1; j >= 0; j--)
 		{
 			temp[j] = ((temp[j] - '0') * currentDigit) + carry;
 
@@ -438,8 +437,12 @@ string BigInteger::multiply(string n1, string n2)
 			temp.insert(0, 1, (carry + '0'));
 
 		temp.append((n1.length() - i - 1), '0'); // as like mult by 10, 100, 1000, 10000 and so on
-
+		cout <<"1: " << res << endl;
+		cout <<"2: " << temp << endl;
 		res = add(res, temp); // O(n)
+		cout << "3: "<<res << endl;
+		cout << "--------------------" << endl;
+		//cout << res << endl;
 	}
 
 	while (res[0] == '0' && res.length() != 1) // erase leading zeros
@@ -470,6 +473,17 @@ pair<string, long long> BigInteger::divide(string n, long long den)
 		result = "0";
 
 	return make_pair(result, rem);
+}
+string BigInteger::divide(string str1, string str2) {
+	if (str2.length() == 1 && str2[0] =='0')
+		return "0";
+	else if (str1 < str2) {
+		return "0";
+	}
+	else {
+		string temp = 
+	}
+
 }
 
 //-------------------------------------------------------------

@@ -53,6 +53,7 @@ private:
 	string subtract(string number1, string number2);
 	string multiply(string n1, string n2);
 	pair<string, long long> divide(string n, long long den);
+	string divide(string str1, string str2);
 	string toString(long long n);
 	long long toInt(string s);
 };
