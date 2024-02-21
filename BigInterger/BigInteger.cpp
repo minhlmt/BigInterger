@@ -204,10 +204,10 @@ BigInteger BigInteger::operator * (BigInteger b)
 // Warning: Denomerator must be within "long long" size not "BigInteger"
 BigInteger BigInteger::operator / (BigInteger b)
 {
-	long long den = toInt(b.getNumber());
+	//long long den = toInt(b.getNumber());
 	BigInteger div;
 
-	div.setNumber(divide(getNumber(), den).first);
+	div.setNumber(divide(getNumber(), b.getNumber()));
 	div.setSign(getSign() != b.getSign());
 
 	if (div.getNumber() == "0") // avoid (-0) problem
@@ -219,12 +219,9 @@ BigInteger BigInteger::operator / (BigInteger b)
 // Warning: Denomerator must be within "long long" size not "BigInteger"
 BigInteger BigInteger::operator % (BigInteger b)
 {
-	long long den = toInt(b.getNumber());
-
 	BigInteger rem;
-	long long rem_int = divide(number, den).second;
-	rem.setNumber(toString(rem_int));
-	rem.setSign(getSign() != b.getSign());
+	rem.setNumber(modulo(getNumber(),b.getNumber()));
+	rem.setSign(false);
 
 	if (rem.getNumber() == "0") // avoid (-0) problem
 		rem.setSign(false);
@@ -265,7 +262,7 @@ BigInteger& BigInteger::operator %= (BigInteger b)
 BigInteger BigInteger::powMod(BigInteger m, BigInteger n)
 {
 	BigInteger x = *this;
-	BigInteger res=1;
+	BigInteger res = 1;
 	while (string(m).compare("0")) {
 		if (m % 2 == 1)
 		{
@@ -273,7 +270,7 @@ BigInteger BigInteger::powMod(BigInteger m, BigInteger n)
 			//res %= n;
 		}
 		x *= x;
-		
+
 		//x %= n;
 		m /= 2;
 
@@ -334,6 +331,14 @@ bool BigInteger::less(BigInteger n1, BigInteger n2)
 		return n1.getNumber().compare(n2.getNumber()) > 0; // greater with -ve sign is LESS
 	}
 }
+bool BigInteger::less(string n1, string n2)
+{
+	if (n1.length() < n2.length())
+		return true;
+	if (n1.length() > n2.length())
+		return false;
+	return n1 < n2;
+}
 //-------------------------------------------------------------
 bool BigInteger::greater(BigInteger n1, BigInteger n2)
 {
@@ -354,7 +359,7 @@ string BigInteger::add(string number1, string number2)
 	else// if(number1.size() < number2.size())
 		number1.insert(0, differenceInLength, '0');
 
-	for (int i = add.size()-1; i >= 0; i--)
+	for (int i = add.size() - 1; i >= 0; i--)
 	{
 		add[i] = ((carry - '0') + (number1[i] - '0') + (number2[i] - '0')) + '0';
 		if (i != 0)
@@ -437,12 +442,7 @@ string BigInteger::multiply(string n1, string n2)
 			temp.insert(0, 1, (carry + '0'));
 
 		temp.append((n1.length() - i - 1), '0'); // as like mult by 10, 100, 1000, 10000 and so on
-		cout <<"1: " << res << endl;
-		cout <<"2: " << temp << endl;
 		res = add(res, temp); // O(n)
-		cout << "3: "<<res << endl;
-		cout << "--------------------" << endl;
-		//cout << res << endl;
 	}
 
 	while (res[0] == '0' && res.length() != 1) // erase leading zeros
@@ -475,15 +475,44 @@ pair<string, long long> BigInteger::divide(string n, long long den)
 	return make_pair(result, rem);
 }
 string BigInteger::divide(string str1, string str2) {
-	if (str2.length() == 1 && str2[0] =='0')
-		return "0";
-	else if (str1 < str2) {
+	if (str2.length() == 1 && str2[0] == '0')
+		return "Error divide 0";
+	else if (less(str1, str2)) {
 		return "0";
 	}
 	else {
-		string temp = 
+		string res = "";
+		string substr1 = str1.substr(0, str2.length());
+		int index = str2.length() - 1;
+		while (index < str1.length()) {
+			if (less(substr1, str2)) {
+				substr1 += str1[index];
+			}
+			for (int i = 1; i <= 10; i++) {
+				int i_temp = i;
+				string mul = multiply(to_string(i), str2);
+				if (less(mul, substr1)) {
+					continue;
+				}
+				if (!less(mul, substr1)) {
+					i = i - 1;
+				}
+				res += to_string(i);
+				substr1 = subtract(substr1, multiply(to_string(i), str2));
+				index++;
+				break;
+
+			}
+		}
+		return res;
 	}
 
+}
+string BigInteger::modulo(string str1, string str2) {
+	string quotient = divide(str1, str2);
+	string mul = multiply(quotient, str2);
+	string res = subtract(str1, mul);
+	return res;
 }
 
 //-------------------------------------------------------------

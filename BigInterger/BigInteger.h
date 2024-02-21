@@ -48,12 +48,14 @@ public:
 private:
 	bool equals(BigInteger n1, BigInteger n2);
 	bool less(BigInteger n1, BigInteger n2);
+	bool less(string n1, string n2);
 	bool greater(BigInteger n1, BigInteger n2);
 	string add(string number1, string number2);
 	string subtract(string number1, string number2);
 	string multiply(string n1, string n2);
 	pair<string, long long> divide(string n, long long den);
 	string divide(string str1, string str2);
+	string modulo(string str1, string str2);
 	string toString(long long n);
 	long long toInt(string s);
 };
