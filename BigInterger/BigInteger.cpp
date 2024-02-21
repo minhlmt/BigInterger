@@ -483,26 +483,35 @@ string BigInteger::divide(string str1, string str2) {
 	else {
 		string res = "";
 		string substr1 = str1.substr(0, str2.length());
-		int index = str2.length() - 1;
+		if ((less(substr1, str2))) {
+			substr1 = str1.substr(0, str2.length() + 1);
+		}
+		int index = substr1.length() - 1;
 		while (index < str1.length()) {
 			if (less(substr1, str2)) {
 				substr1 += str1[index];
 			}
+			if (substr1[0] == '0') {
+				substr1.erase(0, 1);
+			}
 			for (int i = 1; i <= 10; i++) {
 				int i_temp = i;
 				string mul = multiply(to_string(i), str2);
-				if (less(mul, substr1)) {
+				if (less(mul, substr1) || mul == substr1) {
+					if (index == str1.length()) {
+						res += to_string(i_temp);
+						break;
+					}
 					continue;
 				}
 				if (!less(mul, substr1)) {
-					i = i - 1;
+					i_temp = i_temp - 1;
 				}
-				res += to_string(i);
-				substr1 = subtract(substr1, multiply(to_string(i), str2));
-				index++;
+				res += to_string(i_temp);
+				substr1 = subtract(substr1, multiply(to_string(i_temp), str2));
 				break;
-
 			}
+			index++;
 		}
 		return res;
 	}
