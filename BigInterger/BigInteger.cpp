@@ -29,12 +29,7 @@ BigInteger::BigInteger(string s) // "string" constructor
 		sign = (s[0] == '-');
 	}
 }
-//-------------------------------------------------------------
-BigInteger::BigInteger(string s, bool sin) // "string" constructor
-{
-	setNumber(s);
-	setSign(sin);
-}
+
 //-------------------------------------------------------------
 BigInteger::BigInteger(int n) // "int" constructor
 {
@@ -119,41 +114,7 @@ bool BigInteger::operator <= (BigInteger b)
 	return equals((*this), b)
 		|| less((*this), b);
 }
-//-------------------------------------------------------------
-// increments the value, then returns its value
-BigInteger& BigInteger::operator ++() // prefix
-{
-	(*this) = (*this) + 1;
-	return (*this);
-}
-//-------------------------------------------------------------
-// returns the value, then increments its value
-BigInteger BigInteger::operator ++(int) // postfix
-{
-	BigInteger before = (*this);
 
-	(*this) = (*this) + 1;
-
-	return before;
-}
-//-------------------------------------------------------------
-// decrements the value, then return it
-BigInteger& BigInteger::operator --() // prefix
-{
-	(*this) = (*this) - 1;
-	return (*this);
-
-}
-//-------------------------------------------------------------
-// return the value, then decrements it
-BigInteger BigInteger::operator --(int) // postfix
-{
-	BigInteger before = (*this);
-
-	(*this) = (*this) - 1;
-
-	return before;
-}
 //-------------------------------------------------------------
 BigInteger BigInteger::operator + (BigInteger b)
 {
@@ -220,7 +181,7 @@ BigInteger BigInteger::operator / (BigInteger b)
 BigInteger BigInteger::operator % (BigInteger b)
 {
 	BigInteger rem;
-	rem.setNumber(modulo(getNumber(),b.getNumber()));
+	rem.setNumber(modulo(getNumber(), b.getNumber()));
 	rem.setSign(false);
 
 	if (rem.getNumber() == "0") // avoid (-0) problem
@@ -278,16 +239,6 @@ BigInteger BigInteger::powMod(BigInteger m, BigInteger n)
 	return res;
 }
 //-------------------------------------------------------------
-BigInteger& BigInteger::operator [] (int n)
-{
-	return *(this + (n * sizeof(BigInteger)));
-}
-//-------------------------------------------------------------
-BigInteger BigInteger::operator -() // unary minus sign
-{
-	return (*this) * -1;
-}
-//-------------------------------------------------------------
 BigInteger::operator string() // for conversion from BigInteger to string
 {
 	string signedString = (getSign()) ? "-" : ""; // if +ve, don't print + sign
@@ -301,6 +252,7 @@ bool BigInteger::equals(BigInteger n1, BigInteger n2)
 	return n1.getNumber() == n2.getNumber()
 		&& n1.getSign() == n2.getSign();
 }
+
 
 //-------------------------------------------------------------
 bool BigInteger::less(BigInteger n1, BigInteger n2)
@@ -344,6 +296,7 @@ bool BigInteger::greater(BigInteger n1, BigInteger n2)
 {
 	return !equals(n1, n2) && !less(n1, n2);
 }
+
 
 //-------------------------------------------------------------
 // adds two strings and returns their sum in as a string
@@ -451,29 +404,6 @@ string BigInteger::multiply(string n1, string n2)
 	return res;
 }
 
-//-------------------------------------------------------------
-// divides string on long long, returns pair(qutiont, remainder)
-pair<string, long long> BigInteger::divide(string n, long long den)
-{
-	long long rem = 0;
-	string result; result.resize(MAX);
-
-	for (int indx = 0, len = n.length(); indx < len; ++indx)
-	{
-		rem = (rem * 10) + (n[indx] - '0');
-		result[indx] = rem / den + '0';
-		rem %= den;
-	}
-	result.resize(n.length());
-
-	while (result[0] == '0' && result.length() != 1)
-		result.erase(0, 1);
-
-	if (result.length() == 0)
-		result = "0";
-
-	return make_pair(result, rem);
-}
 string BigInteger::divide(string str1, string str2) {
 	if (str2.length() == 1 && str2[0] == '0')
 		return "Error divide 0";
@@ -483,26 +413,35 @@ string BigInteger::divide(string str1, string str2) {
 	else {
 		string res = "";
 		string substr1 = str1.substr(0, str2.length());
-		int index = str2.length() - 1;
+		if ((less(substr1, str2))) {
+			substr1 = str1.substr(0, str2.length() + 1);
+		}
+		int index = substr1.length() - 1;
 		while (index < str1.length()) {
 			if (less(substr1, str2)) {
 				substr1 += str1[index];
 			}
+			if (substr1[0] == '0') {
+				substr1.erase(0, 1);
+			}
 			for (int i = 1; i <= 10; i++) {
 				int i_temp = i;
 				string mul = multiply(to_string(i), str2);
-				if (less(mul, substr1)) {
+				if (less(mul, substr1) || mul == substr1) {
+					if (index == str1.length()) {
+						res += to_string(i_temp);
+						break;
+					}
 					continue;
 				}
 				if (!less(mul, substr1)) {
-					i = i - 1;
+					i_temp = i_temp - 1;
 				}
-				res += to_string(i);
-				substr1 = subtract(substr1, multiply(to_string(i), str2));
-				index++;
+				res += to_string(i_temp);
+				substr1 = subtract(substr1, multiply(to_string(i_temp), str2));
 				break;
-
 			}
+			index++;
 		}
 		return res;
 	}

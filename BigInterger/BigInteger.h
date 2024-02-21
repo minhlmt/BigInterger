@@ -12,7 +12,6 @@ private:
 public:
 	BigInteger(); // empty constructor initializes zero
 	BigInteger(string s); // "string" constructor
-	BigInteger(string s, bool sin); // "string" constructor
 	BigInteger(int n); // "int" constructor
 	void setNumber(string s);
 	const string& getNumber(); // retrieves the number
@@ -27,10 +26,6 @@ public:
 	bool operator < (BigInteger b);
 	bool operator >= (BigInteger b);
 	bool operator <= (BigInteger b);
-	BigInteger& operator ++(); // prefix
-	BigInteger  operator ++(int); // postfix
-	BigInteger& operator --(); // prefix
-	BigInteger  operator --(int); // postfix
 	BigInteger operator + (BigInteger b);
 	BigInteger operator - (BigInteger b);
 	BigInteger operator * (BigInteger b);
@@ -41,9 +36,7 @@ public:
 	BigInteger& operator *= (BigInteger b);
 	BigInteger& operator /= (BigInteger b);
 	BigInteger& operator %= (BigInteger b);
-
-	BigInteger& operator [] (int n);
-	BigInteger operator -(); // unary minus sign
+	
 	operator string(); // for conversion from BigInteger to string
 private:
 	bool equals(BigInteger n1, BigInteger n2);
@@ -53,7 +46,6 @@ private:
 	string add(string number1, string number2);
 	string subtract(string number1, string number2);
 	string multiply(string n1, string n2);
-	pair<string, long long> divide(string n, long long den);
 	string divide(string str1, string str2);
 	string modulo(string str1, string str2);
 	string toString(long long n);
