@@ -46,6 +46,7 @@ private:
 	string add(string number1, string number2);
 	string subtract(string number1, string number2);
 	string multiply(string n1, string n2);
+	string multKaratsuba(string n1, string n2);
 	string divide(string str1, string str2);
 	string modulo(string str1, string str2);
 	string toString(long long n);
