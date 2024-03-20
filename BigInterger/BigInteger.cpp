@@ -335,6 +335,16 @@ string BigInteger::add(string n1, string n2)
 	return add;
 }
 
+string removeLeftZeros(string value) {
+	if (value.size() > 1 && value[0] == '0') {
+		for (size_t i = 0, l = value.size(); i < l; i++) {
+			if (value[i] == '0')
+				continue;
+			return value.substr(i, l - i);
+		}
+	}
+	return value;
+}
 //-------------------------------------------------------------
 // subtracts two strings and returns their sum in as a string
 string BigInteger::subtract(string n1, string n2)
@@ -356,8 +366,7 @@ string BigInteger::subtract(string n1, string n2)
 		sub[i] = (n1[i] - '0') - (n2[i] - '0') + '0';
 	}
 
-	while (sub[0] == '0' && sub.length() != 1) // erase leading zeros
-		sub.erase(0, 1);
+	removeLeftZeros(sub);
 
 	return sub;
 }
@@ -398,22 +407,12 @@ string BigInteger::multiply(string n1, string n2)
 		res = add(res, temp); // O(n)
 	}
 
-	while (res[0] == '0' && res.length() != 1) // erase leading zeros
-		res.erase(0, 1);
+	removeLeftZeros(res);
 
 	return res;
 }
 //------------------Karatsuba--------------------------------
-string removeLeftZeros( string value) {
-	if (value.size() > 1 && value[0] == '0') {
-		for (size_t i = 0, l = value.size(); i < l; i++) {
-			if (value[i] == '0')
-				continue;
-			return value.substr(i, l - i);
-		}
-	}
-	return value;
-}
+
 string mulIntStringByChar(string op1, char op2) {
 	if (op2 == '0') return "0";
 	if (op2 == '1') return op1;
