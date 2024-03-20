@@ -300,21 +300,21 @@ bool BigInteger::greater(BigInteger n1, BigInteger n2)
 
 //-------------------------------------------------------------
 // adds two strings and returns their sum in as a string
-string BigInteger::add(string number1, string number2)
+string BigInteger::add(string n1, string n2)
 {
-	string add = (number1.length() > number2.length()) ? number1 : number2;
+	string add = (n1.length() > n2.length()) ? n1 : n2;
 	char carry = '0';
-	int differenceInLength = abs((int)(number1.size() - number2.size()));
+	int differenceInLength = abs((int)(n1.size() - n2.size()));
 
-	if (number1.size() > number2.size())
-		number2.insert(0, differenceInLength, '0'); // put zeros from left
+	if (n1.size() > n2.size())
+		n2.insert(0, differenceInLength, '0'); // put zeros from left
 
-	else// if(number1.size() < number2.size())
-		number1.insert(0, differenceInLength, '0');
+	else// if(n1.size() < n2.size())
+		n1.insert(0, differenceInLength, '0');
 
 	for (int i = add.size() - 1; i >= 0; i--)
 	{
-		add[i] = ((carry - '0') + (number1[i] - '0') + (number2[i] - '0')) + '0';
+		add[i] = ((carry - '0') + (n1[i] - '0') + (n2[i] - '0')) + '0';
 		if (i != 0)
 		{
 			if (add[i] > '9')
@@ -337,23 +337,23 @@ string BigInteger::add(string number1, string number2)
 
 //-------------------------------------------------------------
 // subtracts two strings and returns their sum in as a string
-string BigInteger::subtract(string number1, string number2)
+string BigInteger::subtract(string n1, string n2)
 {
-	string sub = (number1.length() > number2.length()) ? number1 : number2;
-	int differenceInLength = abs((int)(number1.size() - number2.size()));
+	string sub = (n1.length() > n2.length()) ? n1 : n2;
+	int differenceInLength = abs((int)(n1.size() - n2.size()));
 
-	if (number1.size() > number2.size())
-		number2.insert(0, differenceInLength, '0');
+	if (n1.size() > n2.size())
+		n2.insert(0, differenceInLength, '0');
 
 	else
-		number1.insert(0, differenceInLength, '0');
+		n1.insert(0, differenceInLength, '0');
 
-	for (int i = number1.length(); i >= 0; i--) {
-		if (number1[i] < number2[i]) {
-			number1[i] += 10;
-			number1[i - 1]--;
+	for (int i = n1.length(); i >= 0; i--) {
+		if (n1[i] < n2[i]) {
+			n1[i] += 10;
+			n1[i - 1]--;
 		}
-		sub[i] = (number1[i] - '0') - (number2[i] - '0') + '0';
+		sub[i] = (n1[i] - '0') - (n2[i] - '0') + '0';
 	}
 
 	while (sub[0] == '0' && sub.length() != 1) // erase leading zeros

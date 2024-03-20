@@ -43,8 +43,8 @@ private:
 	bool less(BigInteger n1, BigInteger n2);
 	bool less(string n1, string n2);
 	bool greater(BigInteger n1, BigInteger n2);
-	string add(string number1, string number2);
-	string subtract(string number1, string number2);
+	string add(string n1, string n2);
+	string subtract(string n1, string n2);
 	string multiply(string n1, string n2);
 	string multKaratsuba(string n1, string n2);
 	string divide(string str1, string str2);
