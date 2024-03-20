@@ -182,7 +182,7 @@ BigInteger BigInteger::operator % (BigInteger b)
 {
 	BigInteger rem;
 	rem.setNumber(modulo(getNumber(), b.getNumber()));
-	rem.setSign(false);
+	rem.setSign(getSign() != b.getSign());
 
 	if (rem.getNumber() == "0") // avoid (-0) problem
 		rem.setSign(false);
