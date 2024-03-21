@@ -228,11 +228,10 @@ BigInteger BigInteger::powMod(BigInteger m, BigInteger n)
 		if (m % 2 == 1)
 		{
 			res *= x;
-			//res %= n;
+			res %= n;
 		}
 		x *= x;
-
-		//x %= n;
+		x %= n;
 		m /= 2;
 
 	}
@@ -336,14 +335,10 @@ string BigInteger::add(string n1, string n2)
 }
 
 string removeLeftZeros(string value) {
-	if (value.size() > 1 && value[0] == '0') {
-		for (size_t i = 0, l = value.size(); i < l; i++) {
-			if (value[i] == '0')
-				continue;
-			return value.substr(i, l - i);
-		}
-	}
-	return value;
+	string temp = value;
+	while (temp[0] == '0' && temp.length() != 1)
+		temp.erase(0, 1);
+	return temp;
 }
 //-------------------------------------------------------------
 // subtracts two strings and returns their sum in as a string
@@ -365,10 +360,7 @@ string BigInteger::subtract(string n1, string n2)
 		}
 		sub[i] = (n1[i] - '0') - (n2[i] - '0') + '0';
 	}
-
-	removeLeftZeros(sub);
-
-	return sub;
+	return  removeLeftZeros(sub);
 }
 
 //-------------------------------------------------------------
@@ -406,10 +398,7 @@ string BigInteger::multiply(string n1, string n2)
 		temp.append((n1.length() - i - 1), '0'); // as like mult by 10, 100, 1000, 10000 and so on
 		res = add(res, temp); // O(n)
 	}
-
-	removeLeftZeros(res);
-
-	return res;
+	return  removeLeftZeros(res);
 }
 //------------------Karatsuba--------------------------------
 
@@ -568,7 +557,7 @@ string BigInteger::modulo(string str1, string str2) {
 	string quotient = divide(str1, str2);
 	string mul = multiply(quotient, str2);
 	string res = subtract(str1, mul);
-	return res;
+	return removeLeftZeros(res);
 }
 
 //-------------------------------------------------------------
